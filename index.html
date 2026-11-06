@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absen Break</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+<div class="card">
+  <h1>ABSEN BREAK</h1>
+  <p id="status" class="center">Loading model wajah...</p>
+  <div class="video-wrap">
+    <video id="video" autoplay muted playsinline></video>
+    <canvas id="overlay"></canvas>
+  </div>
+  <p class="center muted">Scan wajah untuk Break / Resume</p>
+  <button class="btn-red" onclick="handleScan('break')">📸 SCAN - MULAI BREAK</button>
+  <button class="btn-green" onclick="handleScan('resume')">📸 SCAN - SELESAI BREAK</button>
+  <a href="pendaftaran.html" class="btn-blue" style="display:block; text-align:center; text-decoration:none; padding:14px; border-radius:12px; margin-top:12px;">📝 PENDAFTARAN</a>
+  <p id="result" class="center"></p>
+  <a href="manager-login.html" class="link-manager">🔒 Login Manager</a>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

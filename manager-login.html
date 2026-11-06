@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="card small">
+  <h1>🔒 MANAGER ONLY</h1>
+  <p class="center muted">Masukkan PIN Manager</p>
+  <input id="pinInput" type="password" inputmode="numeric" placeholder="PIN - default: 1234" maxlength="6">
+  <button class="btn-blue" onclick="loginManager()">MASUK</button>
+  <p id="loginMsg" class="center"></p>
+  <a href="index.html" class="link-manager">← Balik ke Halaman Karyawan</a>
+</div>
+<script>
+function loginManager(){
+  const pin = document.getElementById('pinInput').value;
+  const PIN_BENAR = localStorage.getItem('managerPin') || '1234';
+  let gagal = parseInt(localStorage.getItem('loginGagal') || '0');
+  if(gagal >= 3){ document.getElementById('loginMsg').innerText = '❌ Ke-lock! Tutup browser 5 menit'; return; }
+  if(pin === PIN_BENAR){
+    localStorage.setItem('managerLogin','true');
+    localStorage.setItem('loginGagal','0');
+    window.location.href = 'manager.html';
+  } else {
+    gagal++; localStorage.setItem('loginGagal', gagal);
+    document.getElementById('loginMsg').innerText = `❌ PIN salah! Sisa: ${3-gagal}`;
+  }
+}
+document.getElementById('pinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') loginManager(); });
+</script>
+</body>
+</html>

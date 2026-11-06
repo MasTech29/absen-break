@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+<div class="card">
+  <h1>📝 PENDAFTARAN</h1>
+  <p id="status" class="center">Loading model wajah...</p>
+  <div class="video-wrap">
+    <video id="video" autoplay muted playsinline></video>
+    <canvas id="overlay"></canvas>
+  </div>
+  <input id="regNama" type="text" placeholder="Nama - contoh: Budi" style="margin-bottom:8px;">
+  <input id="regId" type="text" placeholder="ID - contoh: K001" style="margin-bottom:10px;">
+  <button class="btn-blue" onclick="daftarWajah()">📸 DAFTAR WAJAH</button>
+  <p id="regMsg" class="center"></p>
+  <p id="daftarTerdaftar" class="center muted" style="font-size:12px;"></p>
+  <a href="index.html" class="link-manager">← Balik ke Absen Break</a>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

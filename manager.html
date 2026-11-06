@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="card wide">
+  <h1>👨‍💼 DASHBOARD MANAGER</h1>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:12px 0;">
+    <button class="btn-blue" onclick="showTab('live')">LIVE</button>
+    <button class="btn-blue" onclick="showTab('rekap')">REKAP</button>
+    <button class="btn-blue" onclick="showTab('karyawan')">KARYAWAN</button>
+    <button class="btn-blue" onclick="showTab('setting')">SETTING</button>
+    <button class="btn-red" onclick="logout()">LOGOUT</button>
+  </div>
+  <div id="tab-live"><h3>🔴 Lagi Break Sekarang</h3><div id="liveList"></div></div>
+  <div id="tab-rekap" style="display:none;"><h3>📊 Rekap Break</h3><button class="btn-green" onclick="exportExcel()">📥 Export Excel</button><div id="rekapList" style="margin-top:10px;"></div></div>
+  <div id="tab-karyawan" style="display:none;"><h3>👥 Daftar Karyawan</h3><div id="karyawanList"></div></div>
+  <div id="tab-setting" style="display:none;"><h3>⚙️ Setting</h3><input id="newPin" type="text" placeholder="PIN Baru - contoh: 9999"><button class="btn-blue" onclick="gantiPin()">GANTI PIN</button><p id="settingMsg" class="center"></p></div>
+</div>
+<script>
+if(localStorage.getItem('managerLogin')!=='true') window.location.href='manager-login.html';
+function showTab(t){ ['live','rekap','karyawan','setting'].forEach(x=>document.getElementById('tab-'+x).style.display = x===t?'block':'none'); render(); }
+function render(){
+  const users = JSON.parse(localStorage.getItem('users')||'[]');
+  const logs = JSON.parse(localStorage.getItem('breakLogs')||'[]');
+  const sedang = logs.filter(l=>!l.resumeAt);
+  document.getElementById('liveList').innerHTML = sedang.length? sedang.map(l=>`<p>🔴 ${l.nama} (${l.id}) - Mulai: ${new Date(l.breakAt).toLocaleTimeString('id-ID')}</p>`).join('') : '<p class="center muted">Ga ada yang break</p>';
+  document.getElementById('rekapList').innerHTML = logs.length? logs.slice().reverse().map(l=>`<p>${l.nama} - ${new Date(l.breakAt).toLocaleString('id-ID')} → ${l.resumeAt? new Date(l.resumeAt).toLocaleTimeString('id-ID')+' ('+l.durasi+' menit)' : 'MASIH BREAK'}</p>`).join('') : '<p>Belum ada data</p>';
+  document.getElementById('karyawanList').innerHTML = users.length? users.map(u=>`<p>${u.nama} (${u.id}) <button onclick="hapusKaryawan('${u.id}')" style="background:red;color:white;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;">Hapus</button></p>`).join('') : '<p>Belum ada karyawan</p>';
+}
+function hapusKaryawan(id){ if(confirm('Hapus karyawan ini?')){ let u=JSON.parse(localStorage.getItem('users')||'[]'); u=u.filter(x=>x.id!==id); localStorage.setItem('users',JSON.stringify(u)); render(); } }
+function gantiPin(){ const p=document.getElementById('newPin').value.trim(); if(p.length<4) return document.getElementById('settingMsg').innerText='❌ PIN minimal 4 angka'; localStorage.setItem('managerPin',p); document.getElementById('settingMsg').innerText='✅ PIN berhasil diganti jadi '+p; }
+function logout(){ localStorage.removeItem('managerLogin'); window.location.href='index.html'; }
+function exportExcel(){ const logs=JSON.parse(localStorage.getItem('breakLogs')||'[]'); if(!logs.length) return alert('Belum ada data'); let csv='Nama,ID,Mulai Break,Selesai,Durasi Menit\n'; logs.forEach(l=>{ csv+=`${l.nama},${l.id},${new Date(l.breakAt).toLocaleString('id-ID')},${l.resumeAt?new Date(l.resumeAt).toLocaleString('id-ID'):'-'},${l.durasi||''}\n`; }); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='rekap-break.csv'; a.click(); }
+render();
+</script>
+</body>
+</html>
